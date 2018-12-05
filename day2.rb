@@ -6,11 +6,7 @@ def process_single_hash(ids)
   result = {}
 
   ids.each_char do |c|
-    if result.key? c
-      result[c] += 1
-    else
-      result[c] = 1
-    end
+    result.key?(c) ? result[c] += 1 : result[c] = 1
   end
   { has_duplicates: result.value?(2), has_triplicates: result.value?(3) }
 end
@@ -28,4 +24,22 @@ def multiple_checksum(data)
   duplicates * triplicates
 end
 
-puts "The checksum is #{multiple_checksum data}"
+def correct_id_matches(data)
+  data.combination(2) do |str1, str2|
+    diff = []
+    str1.each_char.with_index do |char, index|
+      break if diff.length > 1
+
+      char != str2[index] && diff << index
+    end
+
+    if diff.length == 1
+      str1.slice! diff.first
+
+      return str1
+    end
+  end
+end
+
+puts "The checksum is: #{multiple_checksum data}"
+puts "The matching letters for the correct ID are: #{correct_id_matches data}"
