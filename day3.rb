@@ -19,7 +19,7 @@ end
 
 data = get_data(3).split("\n").map { |str| Claim.new(str) }
 
-def overlapping_fabric(data)
+def generate_matrix(data)
   matrix = Matrix.build(1000) { '.' }
 
   data.each do |claim|
@@ -37,9 +37,41 @@ def overlapping_fabric(data)
     end
   end
 
-  # Uncomment the next line if you want to save the resulting matrix to a txt file
+  # Uncomment the next line if you want to save the resulting matrix to a file
   # File.write('./out.txt', matrix.to_s)
+  matrix
+end
+
+def overlapping_fabric(matrix)
   matrix.map { |val| val == 'X' ? 1 : 0 }.sum
 end
 
-puts "There are #{overlapping_fabric data} inches of overlapping fabric"
+def check_non_overlapping(matrix, claims)
+  claims.each do |claim|
+    x = claim.left_start
+    y = claim.top_start
+    overlaps = false
+
+    claim.width.times do |offset_x|
+      xx = x + offset_x
+
+      claim.height.times do |offset_y|
+        yy = y + offset_y
+
+        if matrix[xx, yy] == 'X'
+          overlaps = true
+          break
+        end
+      end
+
+      break if overlaps
+    end
+
+    return claim.id unless overlaps
+  end
+end
+
+matrix = generate_matrix data
+
+puts "There are #{overlapping_fabric matrix} inches of overlapping fabric"
+puts "Claim \##{check_non_overlapping matrix, data} has no overlapping area"
