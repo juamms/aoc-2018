@@ -51,3 +51,6 @@ build-iPhoneSimulator/
 
 # for RubyMine
 .idea
+
+# remove out.txt file used in some solutions
+out.txt
