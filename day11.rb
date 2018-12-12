@@ -18,7 +18,7 @@ def build_power_grid(data)
 
   300.times do |x|
     300.times do |y|
-      grid[x, y] = calculate_power_level x+1, y+1, data
+      grid[x, y] = calculate_power_level x + 1, y + 1, data
     end
   end
 
@@ -40,52 +40,43 @@ class Matrix
 end
 
 def find_max_power(grid)
-  x_pos = 0
-  y_pos = 0
-  max_power = 0
+  x_pos = 0, y_pos = 0, max_power = 0
+
   297.times do |x|
     297.times do |y|
       power = grid.get_power(x, y)
+      next unless power > max_power
 
-      if power > max_power
-        x_pos = x + 1
-        y_pos = y + 1
-        max_power = power
-      end
+      x_pos = x + 1
+      y_pos = y + 1
+      max_power = power
     end
   end
 
-  return x_pos, y_pos
+  [x_pos, y_pos]
 end
 
 def find_max_power_no_size(grid)
-  x_pos = 0
-  y_pos = 0
-  max_size = 0
-  max_power = 0
+  x_pos = 0, y_pos = 0, max_size = 0, max_power = 0
 
   # Since the max size is found at size 11,
   # we'll only do this loop 15 times for
   # completion's sake. 🙂
   15.times do |size|
-    puts "Checking size #{size}..."
     (300 - size).times do |x|
       (300 - size).times do |y|
         power = grid.get_power(x, y, size)
+        next unless power > max_power
 
-        if power > max_power
-          x_pos = x + 1
-          y_pos = y + 1
-          max_power = power
-          max_size = size
-
-          puts "new max [#{max_power}] #{x_pos},#{y_pos} (#{size})"
-        end
+        x_pos = x + 1
+        y_pos = y + 1
+        max_power = power
+        max_size = size
       end
     end
   end
 
-  return x_pos, y_pos, max_size
+  [x_pos, y_pos, max_size]
 end
 
 grid = build_power_grid data
